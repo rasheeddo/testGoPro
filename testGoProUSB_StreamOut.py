@@ -9,8 +9,17 @@ import sys
 from goprocam import GoProCamera, constants
 import time
 import socket
+import zmq
+import base64
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+########################## VIDEO STREAMER ########################## 
+PORT_DISPLAY = '5555'
+context = zmq.Context()
+footage_socket = context.socket(zmq.PUB)
+footage_socket.bind('tcp://*:' + PORT_DISPLAY)
+
+print("Video streaming on PORT: " +PORT_DISPLAY)
+
 
 ## make sure th ethernet inteface name is correctly
 ## when plugging USB from gopro to pc, the gopro will works as DHCP server
@@ -31,9 +40,14 @@ t = time.time()
 while True:
 	
 	nmat, frame = cap.read()
-	cv2.imshow("GoPro OpenCV", frame)
+	# cv2.imshow("GoPro OpenCV", frame)
 	# frame = cv2.resize(frame, (1696, 960))
-	print(frame.shape)
+
+	encoded, buffer = cv2.imencode('.jpg', frame)
+	jpg_as_text = base64.b64encode(buffer)
+	footage_socket.send(jpg_as_text)
+
+	# print(frame.shape)
 	if cv2.waitKey(1) & 0xFF == ord('q'):
 		break
 
