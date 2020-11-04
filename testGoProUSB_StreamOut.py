@@ -35,7 +35,7 @@ gopro.startWebcam(resolution="480")   #480
 
 # gopro.video_settings(res='480p', fps='30')
 # gopro.gpControlSet(constants.Stream.WINDOW_SIZE, constants.Stream.WindowSize.R720)
-cap = cv2.VideoCapture("udp://172.26.174.51:8554", cv2.CAP_FFMPEG)   # , cv2.CAP_FFMPEG
+cap = cv2.VideoCapture("udp://172.26.174.51:8554?overrun_nonfatal=1&fifo_size=50000000", cv2.CAP_FFMPEG)   # , cv2.CAP_FFMPEG
 t = time.time()
 while True:
 	
@@ -48,8 +48,8 @@ while True:
 	footage_socket.send(jpg_as_text)
 
 	# print(frame.shape)
-	if cv2.waitKey(1) & 0xFF == ord('q'):
-		break
+	# if cv2.waitKey(1) & 0xFF == ord('q'):
+	# 	break
 
 # When everything is done, release the capture
 cap.release()
