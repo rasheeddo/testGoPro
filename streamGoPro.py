@@ -9,13 +9,11 @@ from goprocam import GoProCamera, constants
 import time
 import socket
 
-gpCam = GoProCamera.GoPro()
+gopro = GoProCamera.GoPro()
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
-gpCam.livestream("start")
-
-gpCam.video_settings(res='1080p', fps='30')
-gpCam.gpControlSet(constants.Stream.WINDOW_SIZE, constants.Stream.WindowSize.R720)
+gopro.livestream("start")
+# gopro.video_settings(res='1080p', fps='30')
+gopro.gpControlSet(constants.Stream.WINDOW_SIZE, constants.Stream.WindowSize.R720)
 cap = cv2.VideoCapture("udp://10.5.5.9:8554", cv2.CAP_FFMPEG)
 counter = 0
 t = time.time()
